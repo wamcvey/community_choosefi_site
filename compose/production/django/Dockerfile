@@ -29,8 +29,9 @@ COPY ./compose/production/django/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 RUN chown django /start
-COPY . /app
 
+COPY . /app
+RUN for app in /app/local_apps/* ; do cd $app && pip install --no-cache-dir -r requirements.txt && python setup.py install; done
 RUN chown -R django /app
 
 USER django

@@ -29,4 +29,7 @@ RUN chmod +x /start
 
 WORKDIR /app
 
+COPY local_apps /app/local_apps
+RUN for app in /app/local_apps/* ; do cd $app && pip install --no-cache-dir -r requirements.txt && python setup.py develop; done
+
 ENTRYPOINT ["/entrypoint"]

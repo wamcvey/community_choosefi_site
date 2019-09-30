@@ -4,6 +4,8 @@ Base settings to build other settings files upon.
 
 import environ
 
+from .codered import update_installed_apps, update_templates, update_middleware
+
 ROOT_DIR = (
     environ.Path(__file__) - 3
 )  # (community_choosefi_site/config/settings/base.py - 3 = community_choosefi_site/)
@@ -283,5 +285,13 @@ SOCIALACCOUNT_ADAPTER = "community_choosefi_site.users.adapters.SocialAccountAda
 
 
 
-# Wagtail settings
+# Wagtail/CODERED settings
 WAGTAIL_SITE_NAME = "community_choosefi_site"
+INSTALLED_APPS = update_installed_apps(INSTALLED_APPS)
+MIDDLEWARE = update_middleware(MIDDLEWARE)
+TEMPLATES = update_templates(TEMPLATES, DEBUG)
+
+WAGTAIL_ENABLE_UPDATE_CHECK = DEBUG
+PROJECT_DIR=ROOT_DIR
+BASE_DIR=ROOT_DIR
+WAGTAIL_CACHE = not DEBUG

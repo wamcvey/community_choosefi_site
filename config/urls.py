@@ -1,27 +1,28 @@
 from django.conf import settings
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views import defaults as default_views
-from wagtail.admin import urls as wagtailadmin_urls
+
 from wagtail.documents import urls as wagtaildocs_urls
-from wagtail.core import urls as wagtail_urls
+from coderedcms import admin_urls as coderedadmin_urls
+from coderedcms import search_urls as coderedsearch_urls
+from coderedcms import urls as codered_urls
+
 
 urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
-    path(r'cms/', include(wagtailadmin_urls)),
-    path(r'documents/', include(wagtaildocs_urls)),
+    path(r'admin/', include(coderedadmin_urls)),
 
-    # path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
-    # path(
-    #    "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
-    # ),
-    
+    path('docs/', include(wagtaildocs_urls)),
+    path('search/', include(coderedsearch_urls)),
+
     # User management
     path("users/", include("community_choosefi_site.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
@@ -50,5 +51,6 @@ if settings.DEBUG:
         urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
 
 urlpatterns += [
-    path(r'', include(wagtail_urls)),
+    path(r'', include(codered_urls)),
+    re_path(r'', include(codered_urls)),
 ]

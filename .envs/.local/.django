@@ -2,3 +2,24 @@
 # ------------------------------------------------------------------------------
 USE_DOCKER=yes
 IPYTHONDIR=/app/.ipython
+
+# Redis
+# ------------------------------------------------------------------------------
+REDIS_URL=redis://redis:6379/0
+
+# email
+CONVERTKIT_API_KEY=LD40CefU_UwvYaI_G5jwjQ
+CONVERTKIT_API_SECRET=lFsYKS40iplWULRR4mDpA4a9dsWaazFbvj9yzmIupy8
+
+# AWS / DigitalOcean Spaces
+# ------------------------------------------------------------------------------
+DJANGO_AWS_ACCESS_KEY_ID=PAMA2KOS5QBDOYIDMO5C
+DJANGO_AWS_SECRET_ACCESS_KEY=uVkvX474HCjtLHFFy3n648hLDEE0eMM1WzLwk0b60wM
+DJANGO_AWS_STORAGE_BUCKET_NAME=choosefi
+DJANGO_AWS_S3_REGION_NAME=nyc3
+DJANGO_AWS_S3_CUSTOM_DOMAIN=choosefi.nyc3.cdn.digitaloceanspaces.com
+DJANGO_AWS_ENDPOINT_URL=https://nyc3.digitaloceanspaces.com
+
+# django-allauth
+# ------------------------------------------------------------------------------
+DJANGO_ACCOUNT_ALLOW_REGISTRATION=True

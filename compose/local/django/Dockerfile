@@ -13,9 +13,7 @@ RUN apk update \
   # Translations dependencies
   && apk add gettext \
   # https://docs.djangoproject.com/en/dev/ref/django-admin/#dbshell
-  && apk add postgresql-client \
-  # for git pulls of package deps
-  && apk add git 
+  && apk add postgresql-client
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements /requirements
@@ -29,9 +27,18 @@ COPY ./compose/local/django/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 
-WORKDIR /app
+COPY ./compose/local/django/celery/worker/start /start-celeryworker
+RUN sed -i 's/\r$//g' /start-celeryworker
+RUN chmod +x /start-celeryworker
 
-COPY local_apps /app/local_apps
-RUN for app in /app/local_apps/* ; do cd $app && pip install --no-cache-dir -r requirements.txt && python setup.py develop; done
+COPY ./compose/local/django/celery/beat/start /start-celerybeat
+RUN sed -i 's/\r$//g' /start-celerybeat
+RUN chmod +x /start-celerybeat
+
+COPY ./compose/local/django/celery/flower/start /start-flower
+RUN sed -i 's/\r$//g' /start-flower
+RUN chmod +x /start-flower
+
+WORKDIR /app
 
 ENTRYPOINT ["/entrypoint"]

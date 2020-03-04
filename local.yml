@@ -5,7 +5,7 @@ volumes:
   local_postgres_data_backups: {}
 
 services:
-  django:
+  django: &django
     build:
       context: .
       dockerfile: ./compose/local/django/Dockerfile
@@ -31,3 +31,50 @@ services:
       - local_postgres_data_backups:/backups
     env_file:
       - ./.envs/.local/.postgres
+
+  redis:
+    image: redis:5.0
+
+  celeryworker:
+    <<: *django
+    image: community_choosefi_site_local_celeryworker
+    depends_on:
+      - redis
+      - postgres
+      
+    ports: []
+    command: /start-celeryworker
+
+  celerybeat:
+    <<: *django
+    image: community_choosefi_site_local_celerybeat
+    depends_on:
+      - redis
+      - postgres
+      
+    ports: []
+    command: /start-celerybeat
+
+  flower:
+    <<: *django
+    image: community_choosefi_site_local_flower
+    ports:
+      - "5555:5555"
+    command: /start-flower
+
+  node:
+    build:
+      context: .
+      dockerfile: ./compose/local/node/Dockerfile
+    image: community_choosefi_site_local_node
+    depends_on:
+      - django
+    volumes:
+      - .:/app
+      # http://jdlm.info/articles/2016/03/06/lessons-building-node-app-docker.html
+      - /app/node_modules
+    command: npm run dev
+    ports:
+      - "3000:3000"
+      # Expose browsersync UI: https://www.browsersync.io/docs/options/#option-ui
+      - "3001:3001"

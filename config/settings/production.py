@@ -76,38 +76,30 @@ AWS_S3_OBJECT_PARAMETERS = {
 AWS_DEFAULT_ACL = None
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
 AWS_S3_REGION_NAME = env("DJANGO_AWS_S3_REGION_NAME", default=None)
-
-AWS_S3_ENDPOINT_URL=env('DJANGO_AWS_ENDPOINT_URL')
-AWS_S3_CUSTOM_DOMAIN=env('DJANGO_AWS_S3_CUSTOM_DOMAIN')
-
-
 # STATIC
 # ------------------------
 STATICFILES_STORAGE = "config.settings.production.StaticRootS3Boto3Storage"
-
+STATIC_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/"
 # MEDIA
 # ------------------------------------------------------------------------------
 # region http://stackoverflow.com/questions/10390244/
 # Full-fledge class: https://stackoverflow.com/a/18046120/104731
 from storages.backends.s3boto3 import S3Boto3Storage  # noqa E402
 
+
 class StaticRootS3Boto3Storage(S3Boto3Storage):
-    location = "community/static"
+    location = "static"
     default_acl = "public-read"
 
 
 class MediaRootS3Boto3Storage(S3Boto3Storage):
-    location = "community/media"
-    default_acl = "public-read"
+    location = "media"
     file_overwrite = False
 
 
 # endregion
 DEFAULT_FILE_STORAGE = "config.settings.production.MediaRootS3Boto3Storage"
-# MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/"
-MEDIA_URL = "/".join([AWS_S3_ENDPOINT_URL, MediaRootS3BotoStorage.location, '')
-STATIC_URL = "/".join([AWS_S3_ENDPOINT_URL, StaticRootS3BotoStorage.location, '')
-
+MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/"
 
 # TEMPLATES
 # ------------------------------------------------------------------------------

@@ -1,4 +1,12 @@
+FROM node:10-stretch-slim as client-builder
 
+WORKDIR /app
+COPY ./package.json /app
+RUN npm install && npm cache clean --force
+COPY . /app
+RUN npm run build
+
+# Python build stage
 FROM python:3.6-alpine
 
 ENV PYTHONUNBUFFERED 1
@@ -10,9 +18,7 @@ RUN apk update \
   # Pillow dependencies
   && apk add jpeg-dev zlib-dev freetype-dev lcms2-dev openjpeg-dev tiff-dev tk-dev tcl-dev \
   # CFFI dependencies
-  && apk add libffi-dev py-cffi \
-  # for git pulls of package deps
-  && apk add git 
+  && apk add libffi-dev py-cffi
 
 RUN addgroup -S django \
     && adduser -S -G django django
@@ -31,9 +37,22 @@ COPY ./compose/production/django/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 RUN chown django /start
+COPY ./compose/production/django/celery/worker/start /start-celeryworker
+RUN sed -i 's/\r$//g' /start-celeryworker
+RUN chmod +x /start-celeryworker
+RUN chown django /start-celeryworker
 
-COPY . /app
-RUN for app in /app/local_apps/* ; do cd $app && pip install --no-cache-dir -r requirements.txt && python setup.py install; done
+COPY ./compose/production/django/celery/beat/start /start-celerybeat
+RUN sed -i 's/\r$//g' /start-celerybeat
+RUN chmod +x /start-celerybeat
+RUN chown django /start-celerybeat
+
+COPY ./compose/production/django/celery/flower/start /start-flower
+RUN sed -i 's/\r$//g' /start-flower
+RUN chmod +x /start-flower
+COPY --from=client-builder /app /app
+
+
 RUN chown -R django /app
 
 USER django

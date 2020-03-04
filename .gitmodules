@@ -1,3 +1,0 @@
-[submodule "local_apps/choosefi_local"]
-	path = local_apps/choosefi_local
-	url = git@github.com:wamcvey/choosefi_local.git

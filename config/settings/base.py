@@ -76,6 +76,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "community_choosefi_site.users.apps.UsersConfig",
+    "choosefi_local",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -216,7 +217,7 @@ EMAIL_TIMEOUT = 5
 # ADMIN
 # ------------------------------------------------------------------------------
 # Django Admin URL.
-ADMIN_URL = "admin/"
+ADMIN_URL = "django-admin/"
 # https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = [("""William McVey""", "wam@choosefi.com")]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
@@ -298,3 +299,22 @@ WAGTAIL_CACHE = not DEBUG
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+# SERIALIZATION_MODULES
+# http://radiac.net/projects/django-tagulous/documentation/installation/
+#SERIALIZATION_MODULES = {
+#    'xml':    'tagulous.serializers.xml_serializer',
+#    'json':   'tagulous.serializers.json',
+#    'python': 'tagulous.serializers.python',
+#    'yaml':   'tagulous.serializers.pyyaml',
+#}
+
+
+
+# Your stuff...
+# ------------------------------------------------------------------------------
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 20000
+GEOPOSITION_GOOGLE_MAPS_API_KEY= 'AIzaSyCmGXQD4OUDnuigW25R4VCGlwG1m7OTgyQ'
+
+# Convertkit
+CONVERTKIT_API_KEY = env('CONVERTKIT_API_KEY')
+CONVERTKIT_API_SECRET = env('CONVERTKIT_API_SECRET')

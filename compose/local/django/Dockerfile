@@ -1,8 +1,9 @@
-FROM python:3.6-alpine
+FROM python:3.8-alpine
 
 ENV PYTHONUNBUFFERED 1
 
 RUN apk update \
+  && apk upgrade \
   # psycopg2 dependencies
   && apk add --virtual build-deps gcc python3-dev musl-dev \
   && apk add postgresql-dev \
@@ -13,11 +14,14 @@ RUN apk update \
   # Translations dependencies
   && apk add gettext \
   # https://docs.djangoproject.com/en/dev/ref/django-admin/#dbshell
-  && apk add postgresql-client
+  # useful utilities
+  && apk add --no-cache curl fontconfig git \
+  && apk add postgresql-client \ 
+  && pip3.8 install -U pip
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements /requirements
-RUN pip install -r /requirements/local.txt
+RUN pip install --no-cache-dir -r /requirements/local.txt
 
 COPY ./compose/production/django/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
@@ -40,5 +44,9 @@ RUN sed -i 's/\r$//g' /start-flower
 RUN chmod +x /start-flower
 
 WORKDIR /app
+
+COPY local_apps /app/local_apps
+RUN for app in /app/local_apps/* ; do cd $app && pip install --no-cache-dir -r requirements.txt && python setup.py develop; done
+
 
 ENTRYPOINT ["/entrypoint"]

@@ -1,0 +1,7 @@
+{% extends "wagtailadmin/pages/listing/_page_title_explore.html" %}
+
+{% block pages_listing_title_extra %}
+{% if page.slug %}
+<div style="font-weight: lighter;">slug: <code>{{ page.slug }}</code></div>
+{% endif %}
+{% endblock %}

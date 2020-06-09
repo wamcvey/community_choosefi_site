@@ -1,3 +1,7 @@
+from itertools import chain
+
+import pytz
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
@@ -20,7 +24,22 @@ class User(AbstractUser):
 
     local_groups = models.ManyToManyField('choosefi_local.LocalGroupPage')
     topic_groups = models.ManyToManyField('choosefi_local.TopicGroupPage')
+    timezone = models.CharField(
+        max_length=128,
+        choices=[(x, x) for x in pytz.common_timezones],
+        default="UTC",
+        help_text="Your Timezone")
 
+
+    def upcoming_events(self, limit=20):
+        events = []
+        for page in chain(self.local_groups.all(),
+                          self.topic_groups.all()):
+            for event in page.upcoming_events():
+                event['page'] = page
+                events.append(event)
+        events.sort(key=lambda x: x['start'])
+        return events[:limit]
 
     def save_test(self, *args, **kwargs):
         # See coderedcms/page_models.CoderedLocationPage.save()

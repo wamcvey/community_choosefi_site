@@ -1,4 +1,5 @@
-{% extends "base.html" %}
+{% extends "coderedcms/pages/home_page.html" %}
+
 {% load static %}
 
 {% block title %}User: {{ object.username }}{% endblock %}
@@ -7,28 +8,61 @@
 <div class="container">
 
   <div class="row">
-    <div class="col-sm-12">
+    <div class="col-8">
 
-      <h2>{{ object.username }}</h2>
+      <h2>User: {{ object.username }}</h2>
       {% if object.name %}
         <p>{{ object.name }}</p>
       {% endif %}
+
+      <h3>Local Group Memberships</h3>
+      <ul>
+        {% for group in object.local_groups.all %}
+          <li><a href="{{ group.url }}">{{ group }}</a></li>
+        {% endfor %}
+      </ul>
+
+      <h3>Topic/Interest List Memberships</h3>
+      <p><em>Note: In the production release, we won't actually make these
+             part of the public profile due to privacy (e.g. LGBTQ interest shouldn't
+             out someone). Just a demo.</em>
+      </p>
+      <ul>
+        {% for group in object.topic_groups.all %}
+          <li><a href="{{ group.url }}">{{ group }}</a></li>
+        {% endfor %}
+      </ul>
+
+    <h3>Mailing Lists/Newsletter Subscriptions</h3>
+    <p>XXX: Still to be done, but this will list all of our public newsletter offerings
+      (e.g. Travel, Spanish, Weekly news, etc) and allow users to easily
+      subscribe/unsubscribe.
+    </p>
+
+
+    <h3>Upcoming Events</h3>
+    <ul>
+      {% for event in object.upcoming_events %}
+        <li><a href="{{ event.page.url }}">{{ event.page }}</a> -
+            {{ event.start }} -
+          <a href="{{ event.url }}">{{ event.title }}</a></li>
+      {% endfor %}
+    </ul>
+
     </div>
+
+    {% if object == request.user %}
+    <!-- Action buttons -->
+    <div class="col-4">
+      <h4>Profile Actions</h4>
+        <a class="btn btn-primary" href="{% url 'users:update' %}" role="button">Update Profile Info</a>
+        <a class="btn btn-primary" href="{% url 'account_email' %}" role="button">Update E-Mail</a>
+        <!-- Your Stuff: Custom user template urls -->
+    </div>
+    <!-- End Action buttons -->
+    {% endif %}
+
   </div>
-
-{% if object == request.user %}
-<!-- Action buttons -->
-<div class="row">
-
-  <div class="col-sm-12">
-    <a class="btn btn-primary" href="{% url 'users:update' %}" role="button">My Info</a>
-    <a class="btn btn-primary" href="{% url 'account_email' %}" role="button">E-Mail</a>
-    <!-- Your Stuff: Custom user template urls -->
-  </div>
-
-</div>
-<!-- End Action buttons -->
-{% endif %}
 
 
 </div>

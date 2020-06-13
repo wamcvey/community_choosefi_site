@@ -31,14 +31,15 @@ services:
       - ./.envs/.production/.postgres
 
   traefik:
-    build:
-      context: .
-      dockerfile: ./compose/production/traefik/Dockerfile
-    image: community_choosefi_site_production_traefik
+    image: traefik:v2.0
     depends_on:
       - django
     volumes:
       - production_traefik:/etc/traefik/acme
+      - ./compose/production/traefik/traefik.yml:/etc/traefik/traefik.yml
+      - ./compose/production/traefik/traefik-dynamic.yml:/etc/traefik/traefik-dynamic.yml
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"

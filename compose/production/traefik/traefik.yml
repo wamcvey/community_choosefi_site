@@ -1,0 +1,35 @@
+## traefik.yml
+
+log:
+  level: INFO
+
+accessLog: {}
+# bufferingSize: 100
+
+
+entryPoints:
+  http:
+    address: ":80"
+  https:
+    address: ":443"
+
+certificatesResolvers:
+  choosefi_acme_resolver:
+    acme:
+      email: "wam+letsencrypt@choosefi.com"
+      storage: "/etc/traefik/acme/acme.json"
+      httpChallenge:
+        # used during the challenge
+        entryPoint: http
+
+providers:
+  docker:
+    defaultRule: "Host(`{{ trimPrefix `/` .Name }}.docker.localhost`)"
+    exposedByDefault: false
+    network: web_network
+  file:
+    filename: /etc/traefik/traefik-dynamic.yml
+    watch:  true
+
+# API and dashboard configuration
+api: {}

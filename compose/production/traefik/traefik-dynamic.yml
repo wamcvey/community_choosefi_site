@@ -1,0 +1,38 @@
+## traefik-dynamic.yml
+
+http:
+  routers:
+    api_https:
+      rule: "Host(`traefik.cms.choosefi.com`)"
+      entryPoints:
+        - "https"
+      service: api@internal
+      middlewares:
+        - auth-traefik-dashboard
+      tls:
+        certResolver: "choosefi_acme_resolver"
+    # api_nossl:
+    #   rule: "Host(`traefik.cms.choosefi.com`)"
+    #   entryPoints:
+    #     - "http"
+    #   service: api@internal
+    #   middlewares:
+    #     - auth-traefik-dashboard
+
+  middlewares:
+    redirect-to-ssl:
+      redirectScheme:
+        scheme: https
+
+    redirect-to-https-www:
+      redirectRegex:
+        regex: "^https?://(.*)"
+        replacement: "https://www.${1}"
+        permanent: true
+
+    auth-traefik-dashboard:
+      basicAuth:
+        users:
+          # Bhe$8b3XfOE$58bM!
+          - "admin:$apr1$uab9EhWE$4G0z8ggD9VgP4fvtNSd.I/"
+

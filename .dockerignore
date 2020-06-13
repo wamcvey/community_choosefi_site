@@ -2,3 +2,7 @@
 !.coveragerc
 !.env
 !.pylintrc
+
+community_choosefi_site/media
+.git
+.envs

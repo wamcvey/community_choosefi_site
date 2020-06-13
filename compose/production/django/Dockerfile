@@ -1,24 +1,20 @@
-FROM node:10-stretch-slim as client-builder
-
-WORKDIR /app
-COPY ./package.json /app
-RUN npm install && npm cache clean --force
-COPY . /app
-RUN npm run build
-
-# Python build stage
-FROM python:3.6-alpine
+FROM python:3.8-alpine
 
 ENV PYTHONUNBUFFERED 1
 
 RUN apk update \
+  && apk upgrade \
   # psycopg2 dependencies
   && apk add --virtual build-deps gcc python3-dev musl-dev \
   && apk add postgresql-dev \
   # Pillow dependencies
   && apk add jpeg-dev zlib-dev freetype-dev lcms2-dev openjpeg-dev tiff-dev tk-dev tcl-dev \
   # CFFI dependencies
-  && apk add libffi-dev py-cffi
+  && apk add libffi-dev py-cffi \
+  # useful utilities
+  && apk add --no-cache curl fontconfig git \
+  && apk add postgresql-client \ 
+  && pip3.8 install -U pip
 
 RUN addgroup -S django \
     && adduser -S -G django django
@@ -37,6 +33,7 @@ COPY ./compose/production/django/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 RUN chown django /start
+
 COPY ./compose/production/django/celery/worker/start /start-celeryworker
 RUN sed -i 's/\r$//g' /start-celeryworker
 RUN chmod +x /start-celeryworker
@@ -50,13 +47,13 @@ RUN chown django /start-celerybeat
 COPY ./compose/production/django/celery/flower/start /start-flower
 RUN sed -i 's/\r$//g' /start-flower
 RUN chmod +x /start-flower
-COPY --from=client-builder /app /app
-
-
-RUN chown -R django /app
-
-USER django
 
 WORKDIR /app
+
+COPY local_apps /app/local_apps
+RUN for app in /app/local_apps/* ; do cd $app && pip install --no-cache-dir -r requirements.txt && python setup.py develop; done
+
+RUN chown -R django /app
+USER django
 
 ENTRYPOINT ["/entrypoint"]

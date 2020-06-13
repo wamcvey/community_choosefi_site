@@ -8,7 +8,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/django/Dockerfile
-    image: community_choosefi_site_production_django
+    image: registry.digitalocean.com/choosefi/community_choosefi_site_production_django
     depends_on:
       - redis
     env_file:
@@ -35,25 +35,17 @@ services:
 
   celeryworker:
     <<: *django
-    image: community_choosefi_site_production_celeryworker
+    image: registry.digitalocean.com/choosefi/community_choosefi_site_production_celeryworker
     command: /start-celeryworker
 
   celerybeat:
     <<: *django
-    image: community_choosefi_site_production_celerybeat
+    image: registry.digitalocean.com/choosefi/community_choosefi_site_production_celerybeat
     command: /start-celerybeat
 
   flower:
     <<: *django
-    image: community_choosefi_site_production_flower
+    image: registry.digitalocean.com/choosefi/community_choosefi_site_production_flower
     ports:
       - "5555:5555"
     command: /start-flower
-  awscli:
-    build:
-      context: .
-      dockerfile: ./compose/production/aws/Dockerfile
-    env_file:
-      - ./.envs/.production/.django
-    volumes:
-      - production_postgres_data_backups:/backups

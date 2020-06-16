@@ -3,7 +3,7 @@
 http:
   routers:
     api_https:
-      rule: "Host(`traefik.cms.choosefi.com`)"
+      rule: "Host(`traefik.community.choosefi.com`)"
       entryPoints:
         - "https"
       service: api@internal

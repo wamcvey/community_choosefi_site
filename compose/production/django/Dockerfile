@@ -1,5 +1,9 @@
 FROM python:3.8-alpine
 
+WORKDIR /app
+COPY . /app
+
+
 ENV PYTHONUNBUFFERED 1
 
 RUN apk update \

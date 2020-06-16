@@ -1,10 +1,9 @@
-version: '3'
+version: '3.5'
 
 volumes:
   production_traefik: {}
 
-services:
-  django: &django
+x-genericdjango: &django
     build:
       context: .
       dockerfile: ./compose/production/django/Dockerfile
@@ -12,26 +11,53 @@ services:
     depends_on:
       - redis
     env_file:
-      - ./.envs/.production/.django
-      - ./.envs/.production/.postgres
+      - .envs/.production/.django
+      - .envs/.production/.postgres
     command: /start
 
+services:
+  django: 
+    <<: *django
+    labels:
+      - traefik.enable=true
+
+      - traefik.http.routers.community_route_http.rule=Host(`community.choosefi.com`)
+      - traefik.http.routers.community_route_http.entrypoints=http
+      - "traefik.http.routers.community_route_http.middlewares=redirect-to-ssl@file"
+
+      - traefik.http.routers.community_route_https.rule=Host(`community.choosefi.com`)
+      - traefik.http.routers.community_route_https.entrypoints=https
+      - traefik.http.routers.community_route_https.tls.certresolver=choosefi_acme_resolver
+      - traefik.http.middlewares.corsheader.headers.accesscontrolalloworigin=*
+      - traefik.http.routers.community_route_https.middlewares=corsheader
+    networks:
+      - web
+      - redis
+    expose:
+      - "5000"
+
   traefik:
-    image: traefik:v2.0
-    depends_on:
-      - django
+    build:
+      context: .
+      dockerfile: ./compose/production/traefik/Dockerfile
+    # image: community_choosefi_site_production_traefik
+    image: registry.digitalocean.com/choosefi/community_choosefi_site_production_traefik
+    #depends_on:
+    #  - django
     volumes:
       - production_traefik:/etc/traefik/acme
-      - ./compose/production/traefik/traefik.yml:/etc/traefik/traefik.yml
-      - ./compose/production/traefik/traefik-dynamic.yml:/etc/traefik/traefik-dynamic.yml
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - "0.0.0.0:80:80"
-      - "0.0.0.0:443:443"
+      - "80:80"
+      - "443:443"
+    networks:
+      - web
 
   redis:
     image: redis:5.0
+    networks:
+      - redis
 
   celeryworker:
     <<: *django
@@ -49,3 +75,13 @@ services:
     ports:
       - "5555:5555"
     command: /start-flower
+    networks:
+      - web
+
+networks:
+  web:
+    name: web_network
+
+  redis:
+    name: redis_network
+

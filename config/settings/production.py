@@ -74,12 +74,20 @@ AWS_S3_OBJECT_PARAMETERS = {
 }
 #  https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
 AWS_DEFAULT_ACL = None
+
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
 AWS_S3_REGION_NAME = env("DJANGO_AWS_S3_REGION_NAME", default=None)
+AWS_S3_ENDPOINT_URL=env('DJANGO_AWS_ENDPOINT_URL')
+AWS_S3_CUSTOM_DOMAIN=env('DJANGO_AWS_S3_CUSTOM_DOMAIN')
+AWS_HEADERS = {
+    'Access-Control-Allow-Origin': '*'
+}
+
 # STATIC
 # ------------------------
 STATICFILES_STORAGE = "config.settings.production.StaticRootS3Boto3Storage"
-STATIC_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/"
+STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
+
 # MEDIA
 # ------------------------------------------------------------------------------
 # region http://stackoverflow.com/questions/10390244/
@@ -94,12 +102,15 @@ class StaticRootS3Boto3Storage(S3Boto3Storage):
 
 class MediaRootS3Boto3Storage(S3Boto3Storage):
     location = "media"
+    default_acl = "public-read"
     file_overwrite = False
 
 
 # endregion
 DEFAULT_FILE_STORAGE = "config.settings.production.MediaRootS3Boto3Storage"
-MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/"
+# MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/"
+MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
+
 
 # TEMPLATES
 # ------------------------------------------------------------------------------

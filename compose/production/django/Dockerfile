@@ -1,7 +1,6 @@
 FROM python:3.8-alpine
 
 WORKDIR /app
-COPY . /app
 
 
 ENV PYTHONUNBUFFERED 1
@@ -54,7 +53,8 @@ RUN chmod +x /start-flower
 
 WORKDIR /app
 
-COPY local_apps /app/local_apps
+COPY . /app
+
 RUN for app in /app/local_apps/* ; do cd $app && pip install --no-cache-dir -r requirements.txt && python setup.py develop; done
 
 RUN chown -R django /app

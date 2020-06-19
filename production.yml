@@ -63,11 +63,15 @@ services:
     <<: *django
     image: registry.digitalocean.com/choosefi/community_choosefi_site_production_celeryworker
     command: /start-celeryworker
+    networks:
+      - redis
 
   celerybeat:
     <<: *django
     image: registry.digitalocean.com/choosefi/community_choosefi_site_production_celerybeat
     command: /start-celerybeat
+    networks:
+      - redis
 
   flower:
     <<: *django
@@ -77,6 +81,7 @@ services:
     command: /start-flower
     networks:
       - web
+      - redis
 
 networks:
   web:

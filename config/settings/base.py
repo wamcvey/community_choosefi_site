@@ -332,6 +332,8 @@ MIDDLEWARE = update_middleware(MIDDLEWARE)
 TEMPLATES = update_templates(TEMPLATES, DEBUG)
 WAGTAILIMAGES_MAX_UPLOAD_SIZE = 20 * 1024 * 1024  # i.e. 20MB
 
+# See: https://github.com/coderedcorp/coderedcms/issues/325
+# WAGTAILIMAGES_IMAGE_MODEL = 'website.ProvenancedImage'
 
 WAGTAIL_ENABLE_UPDATE_CHECK = DEBUG
 PROJECT_DIR=ROOT_DIR

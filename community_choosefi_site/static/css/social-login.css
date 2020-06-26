@@ -1,0 +1,51 @@
+/* Styling for Login pages */
+.socialaccount_providers li {
+    display: block;
+    border-radius: 3px
+}
+
+a.socialaccount_provider::before {
+    content: 'Login in with ';
+    padding-left: 3em;
+}
+
+a.socialaccount_provider.google::before {
+    background: url(../3rd-party/google_signin_buttons/web/vector/btn_google_light_normal_ios.svg);
+    background-origin: border-box;
+    background-repeat: no-repeat;
+    background-position: .5em;
+}
+
+a.socialaccount_provider.facebook::before {
+  background: url(../3rd-party/fb_signin_button/facebook-fadd25.svg);
+  background-origin: border-box;
+  background-repeat: no-repeat;
+  background-position: 1em;
+}
+
+a.socialaccount_provider {
+  width: 100%;
+  display: block;
+  border: 1px;
+  margin-bottom: 1em;
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.12), 0 1px 1px 0 rgba(0, 0, 0, 0.24);
+  line-height: 3rem;
+}
+
+a.socialaccount_provider:hover {
+  border-color: rgb(32, 32, 32);
+  border-color: #999;
+  border: 1px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  text-decoration: none !important;
+  background-color: rgb(238, 238, 238);
+
+}
+
+.login-or::before, .login-or::after {
+  content: " — ";
+}
+
+.login-or {
+  text-align: center;
+}

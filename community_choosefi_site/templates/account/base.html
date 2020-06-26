@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}{% block head_title %}{% endblock head_title %}{% endblock title %}
 
 {% block content %}
@@ -8,3 +9,9 @@
   </div>
 </div>
 {% endblock %}
+
+{% block custom_assets %}
+   <link rel="stylesheet" type="text/css" href="{% static 'css/social-login.css' %}">
+   {{ block.super }}
+{% endblock %}
+

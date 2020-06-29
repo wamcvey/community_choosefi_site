@@ -1,0 +1,11 @@
+#!/bin/sh
+case "$1" in 
+django|dj)  
+	shift
+	docker-compose run django python manage.py $@ 
+	;;
+
+*)
+	docker-compose $@ 
+	;;
+esac

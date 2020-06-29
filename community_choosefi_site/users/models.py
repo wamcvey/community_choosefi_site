@@ -24,6 +24,8 @@ class User(AbstractUser):
 
     local_groups = models.ManyToManyField('choosefi_local.LocalGroupPage')
     topic_groups = models.ManyToManyField('choosefi_local.TopicGroupPage')
+    share_group_memberships = models.BooleanField(
+        default=False, help_text="Share group membership with other members")
     timezone = models.CharField(
         max_length=128,
         choices=[(x, x) for x in pytz.common_timezones],

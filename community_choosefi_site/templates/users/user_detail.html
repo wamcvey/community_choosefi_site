@@ -15,23 +15,28 @@
         <p>{{ object.name }}</p>
       {% endif %}
 
+      {% if user.username == object.username or object.share_group_memberships %}
+      <div>
       <h3>Local Group Memberships</h3>
       <ul>
         {% for group in object.local_groups.all %}
           <li><a href="{{ group.url }}">{{ group }}</a></li>
+        {% empty %}
+          <li><em>no local group memberships</em></li>
         {% endfor %}
       </ul>
+      </div>
 
       <h3>Topic/Interest List Memberships</h3>
-      <p><em>Note: In the production release, we won't actually make these
-             part of the public profile due to privacy (e.g. LGBTQ interest shouldn't
-             out someone). Just a demo.</em>
-      </p>
       <ul>
         {% for group in object.topic_groups.all %}
           <li><a href="{{ group.url }}">{{ group }}</a></li>
+        {% empty %}
+          <li><em>no topic group memberships</em></li>
         {% endfor %}
       </ul>
+      </div>
+      {% endif %}
 
     <h3>Mailing Lists/Newsletter Subscriptions</h3>
     <p>XXX: Still to be done, but this will list all of our public newsletter offerings

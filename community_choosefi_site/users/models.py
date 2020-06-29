@@ -35,12 +35,11 @@ class User(AbstractUser):
 
     def upcoming_events(self, limit=20):
         events = []
-        for page in chain(self.local_groups.all(),
+        for group_page in chain(self.local_groups.all(),
                           self.topic_groups.all()):
-            for event in page.upcoming_events():
-                event['page'] = page
+            for event in group_page.get_index_children():
                 events.append(event)
-        events.sort(key=lambda x: x['start'])
+        # events.sort(key=lambda x: x.most_recent_occurrence())
         return events[:limit]
 
     def save_test(self, *args, **kwargs):

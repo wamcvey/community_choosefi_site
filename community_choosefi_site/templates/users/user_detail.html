@@ -38,21 +38,41 @@
       </div>
       {% endif %}
 
-    <h3>Mailing Lists/Newsletter Subscriptions</h3>
-    <p>XXX: Still to be done, but this will list all of our public newsletter offerings
-      (e.g. Travel, Spanish, Weekly news, etc) and allow users to easily
-      subscribe/unsubscribe.
-    </p>
+      <div class="ribbon-container">
+        <div class="ribbon orange-ribbon">
+          <!-- tools, hammer, -->
+          <span><i class="fas fa-star-half-alt"></i> Upcoming</span>
+        </div>
+      <h3>Mailing Lists/Newsletter Subscriptions</h3>
+      <p>This will list all of our public newsletter and mailing list offerings
+        (e.g. Travel, Spanish, Weekly news, etc) and allow users to easily
+        subscribe/unsubscribe.
+      </p>
+      </div>
 
-
-    <h3>Upcoming Events</h3>
-    <ul>
-      {% for event in object.upcoming_events %}
-        <li><a href="{{ event.page.url }}">{{ event.page }}</a> -
-            {{ event.start }} -
-          <a href="{{ event.url }}">{{ event.title }}</a></li>
-      {% endfor %}
-    </ul>
+      <div>
+      <h3>Upcoming Events</h3>
+      <ul>
+        {% for event in object.upcoming_events %}
+          {% with event.next_occurrence as occurrence %}
+            {% with start_datetime=occurrence.0  end_datetime=occurrence.1  occurrence_obj=occurrence.2 %}
+            {%  if occurrence %}{# events in the past return None on 'next_occurrence' #}
+            <li>
+              {{ start_datetime }} -
+                <a href="{{ event.url }}">{{ event.title }}</a>
+                {% with parent_group=event.get_parent %}
+                (<a href="{{ parent_group.url }}">{{ parent_group }}</a>)
+                {% endwith %}
+                {% if occurrence_obj.repeat %}
+                  (repeats <em>{{ occurrence_obj.repeat|cut:"RRULE:FREQ="|lower }}</em>)
+                {% endif %}
+            </li>
+            {%  endif %}
+            {% endwith %}
+          {% endwith %}
+        {% endfor %}
+      </ul>
+      </div>
 
     </div>
 

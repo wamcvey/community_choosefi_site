@@ -1,0 +1,21 @@
+#!/bin/sh
+
+BOGUS_ERROR="InsecureRequestWarning: Unverified HTTPS request is being made to host"
+HOST=community-svr1
+
+# docker-machine ssh $HOST mkdir -p /srv/community-site
+docker-machine scp -r -d .envs/ $HOST:/srv/community-site/.envs
+docker-machine scp -r -d production.yml $HOST:/srv/community-site
+
+docker-compose -f production.yml build
+docker-compose -f production.yml push
+
+# The pull has to be with docker-compose, since it transfers the docker credentials (docker-machine doesn't)
+docker-compose -f production.yml --context community pull 2>&1 | grep -v "$BOGUS_ERROR"
+
+docker-machine ssh $HOST "cd /srv/community-site && docker-compose -f production.yml up -d"
+docker-machine ssh $HOST "cd /srv/community-site && docker-compose -f production.yml logs --follow"
+
+#docker-compose -f production.yml --context community up -d 2>&1 | grep -v "$BOGUS_ERROR"
+#docker-compose -f production.yml --context community logs --follow 2>&1 | grep -v "$BOGUS_ERROR"
+

@@ -2,8 +2,11 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.views.generic import DetailView, RedirectView, UpdateView
+from django import forms
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
+
+from .forms import UserChangeForm
 
 User = get_user_model()
 
@@ -12,6 +15,7 @@ class UserDetailView(LoginRequiredMixin, DetailView):
     model = User
     slug_field = "username"
     slug_url_kwarg = "username"
+    context_object_name = "username"
 
 
 user_detail_view = UserDetailView.as_view()
@@ -19,7 +23,7 @@ user_detail_view = UserDetailView.as_view()
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = User
-    fields = ['name', 'location', 'share_location', 'share_resolution', 'timezone']
+    form_class = UserChangeForm
 
     def get_success_url(self):
         return reverse("users:detail", kwargs={"username": self.request.user.username})

@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+
 from itertools import chain
 
 import pytz
@@ -16,11 +19,20 @@ class User(AbstractUser):
     location = models.TextField(blank=True,
                                 help_text="Your approximate address",
                                 verbose_name="Address")
-    share_location = models.BooleanField(default=False,
-                                         help_text="Share location with other members")
+    share_location = models.BooleanField(
+        default=False,
+        help_text="Share location with other members")
+
+    LOCATION_RESOLUTION_CHOICES = [
+        (5, "Exact Location"),      # resolution of 11meters, .0001
+        (2, "Nearby location (±5km or 3 miles)"),   # .1
+        (1, "Neighborhood (±50km or 31 miles"), # 0
+        (0, "Region (±500km or 310 miles"),    # 10
+    ]
     share_resolution = models.IntegerField(
-        default=0,
-        help_text="Amount of resolution to apply to address. 0=exact. 5=appx 100km/60miles")
+        default=1,
+        choices=LOCATION_RESOLUTION_CHOICES,
+        help_text="Amount of resolution to apply to address.")
 
     local_groups = models.ManyToManyField('choosefi_local.LocalGroupPage')
     topic_groups = models.ManyToManyField('choosefi_local.TopicGroupPage')
@@ -31,6 +43,10 @@ class User(AbstractUser):
         choices=[(x, x) for x in pytz.common_timezones],
         default="UTC",
         help_text="Your Timezone")
+
+    def rounded_location(self, latitude, longitude):
+        round_resolution = self.share_resolution -1
+        return (round(latitude, round_resolution), round(longitude, round_resolution))
 
 
     def upcoming_events(self, limit=20):

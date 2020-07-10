@@ -4,10 +4,13 @@
 {% block custom_assets %}
 {# Add your custom CSS here #}
 <script src="https://kit.fontawesome.com/ab5122a5f7.js" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="{% static 'website/css/custom.css' %}">
+{% block inline_css %}{% endblock %}
 {% endblock %}
 
 {% block custom_scripts %}
 {# Add your custom JavaScript here, or delete the line below if you don't need any #}
+{% block inline_js %}{% endblock %}
 <script type="text/javascript" src="{% static 'website/js/custom.js' %}"></script>
 {% endblock %}

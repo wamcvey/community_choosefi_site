@@ -1,6 +1,67 @@
+/* Generic ChooseFI Styling */
+h1, h2 {
+    color: rgb(253, 115, 54);
+}
+
+H1, H2, H3 {
+  font-family: "Barlow", Sans-serif;
+  text-align: center;
+}
+H1, H2 {
+  font-weight: 700;
+}
+H3 {
+  font-weight: 600;
+}
+
+/* Specific ChooseFI styling for common page objects
+ */
+.fullwidth-blue-div {
+  background-color: rgb(9,48,86);
+  color: white;
+  text-align: center;
+  padding: 2em;
+}
+
+/* Customizations for bootstrap
+ */
+.hero-fg {
+  padding-top: 400px;
+  padding-bottom: 50px;
+}
+.hero-fg h1 {
+  background-color: rgba(128, 128, 128, .5);
+  border-radius: 5px;
+  width: 60%;
+}
+.hero-bg h1, .hero-bg h2 {
+  color: white;
+}
+
+/* Hover effects from https://github.com/IanLunn/Hover/tree/v2.1.1 (MIT license)
+ */
+
+/* Grow */
+.hvr-grow {
+  display: inline-block;
+  vertical-align: middle;
+  transform: translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  backface-visibility: hidden;
+  -moz-osx-font-smoothing: grayscale;
+  transition-duration: 0.3s;
+  transition-property: transform;
+}
+.hvr-grow:hover,
+.hvr-grow:focus,
+.hvr-grow:active {
+  transform: scale(1.1);
+}
+
 /* Corner ribbons inspired by:
  * https://www.antarcticathemes.com/tutorials/how-to-create-a-corner-ribbon/
  */
+
 .ribbon-container {
   position: relative;
 }

@@ -2,3 +2,6 @@
 	path = local_apps/choosefi_local
 	url = git@github.com:wamcvey/choosefi_local.git
 	branch = wagtail
+[submodule "local_apps/choosefi_vault_ui"]
+	path = local_apps/choosefi_vault_ui
+	url = git@github.com:wamcvey/choosefi_vault_ui.git

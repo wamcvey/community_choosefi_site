@@ -75,12 +75,13 @@ THIRD_PARTY_APPS = [
 
     "rest_framework",
     "django_celery_beat",
+    "tagulous",                   # needed by the vault_ui app
 ]
 
 LOCAL_APPS = [
     "community_choosefi_site.users.apps.UsersConfig",
     "choosefi_local",
-    # Your stuff: custom apps go here
+    "choosefi_vault_ui",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

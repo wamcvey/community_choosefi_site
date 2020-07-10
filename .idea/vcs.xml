@@ -3,5 +3,6 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/local_apps/choosefi_local" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/local_apps/choosefi_vault_ui" vcs="Git" />
   </component>
 </project>

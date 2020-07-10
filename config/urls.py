@@ -9,7 +9,7 @@ from wagtail.documents import urls as wagtaildocs_urls
 from coderedcms import admin_urls as coderedadmin_urls
 from coderedcms import search_urls as coderedsearch_urls
 from coderedcms import urls as codered_urls
-
+from choosefi_vault_ui import urls as vault_urls
 
 urlpatterns = [
     # User management
@@ -24,6 +24,7 @@ urlpatterns = [
      path('search/', include(coderedsearch_urls)),
 
      # Your stuff: custom urls includes go here
+     path('vault/', include(vault_urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
@@ -55,4 +56,4 @@ if settings.DEBUG:
 urlpatterns += [
     path(r'', include(codered_urls)),
     re_path(r'', include(codered_urls)),
-] 
+]

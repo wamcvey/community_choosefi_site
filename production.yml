@@ -35,6 +35,9 @@ services:
       - redis
     expose:
       - "5000"
+    volumes:
+      - /srv/shared:/srv/shared
+
 
   traefik:
     build:

@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 from django.views import defaults as default_views
 
 from wagtail.documents import urls as wagtaildocs_urls
+from wagtail.contrib.sitemaps.views import sitemap
 from coderedcms import admin_urls as coderedadmin_urls
 from coderedcms import search_urls as coderedsearch_urls
 from coderedcms import urls as codered_urls
@@ -16,12 +17,13 @@ urlpatterns = [
     path("users/", include("community_choosefi_site.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
 
-     # Django Admin, use {% url 'admin:index' %}
-     path(settings.ADMIN_URL, admin.site.urls),
-     path(r'admin/', include(coderedadmin_urls)),
+    # Django Admin, use {% url 'admin:index' %}
+    path(settings.ADMIN_URL, admin.site.urls),
+    path(r'admin/', include(coderedadmin_urls)),
 
-     path('docs/', include(wagtaildocs_urls)),
-     path('search/', include(coderedsearch_urls)),
+    path('docs/', include(wagtaildocs_urls)),
+    path('search/', include(coderedsearch_urls)),
+    path('sitemap.xml', sitemap),
 
      # Your stuff: custom urls includes go here
      path('vault/', include(vault_urls)),
